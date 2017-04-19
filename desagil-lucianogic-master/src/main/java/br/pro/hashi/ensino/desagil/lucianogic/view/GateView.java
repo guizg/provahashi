@@ -22,7 +22,7 @@ public class GateView extends FixedPanel implements ItemListener {
 	private Image image;
 
 	private JCheckBox[] inBoxes;
-	private JCheckBox outBox;
+	private JCheckBox[] outBoxes;
 
 	private Switch[] switches;
 	private Gate gate;
@@ -36,6 +36,7 @@ public class GateView extends FixedPanel implements ItemListener {
 		image = loadImage(gate.toString());
 
 		int inSize = gate.getInSize();
+		int outSize = gate.getOutSize();
 
 		inBoxes = new JCheckBox[inSize];
 
@@ -51,9 +52,15 @@ public class GateView extends FixedPanel implements ItemListener {
 			gate.connect(switches[i], i);
 		}
 
-		outBox = new JCheckBox();
-
-		outBox.setEnabled(false);
+		outBoxes = new JCheckBox[outSize];
+		
+		outBoxes[0] = new JCheckBox();
+		outBoxes[0].setEnabled(false);
+		if(outSize == 2){
+			outBoxes[1] = new JCheckBox();
+			outBoxes[1].setEnabled(false);
+		}
+		
 
 		if(inSize == 1) {
 			add(inBoxes[0], 0, 60, 20, 20);			
@@ -64,9 +71,18 @@ public class GateView extends FixedPanel implements ItemListener {
 			}			
 		}
 
-		add(outBox, 184, 60, 20, 20);
+		add(outBoxes[0], 184, 60, 20, 20);
+		
+		if(outSize == 2){
+			add(outBoxes[1], 184, 100, 20, 20);
+		}
 
-		outBox.setSelected(gate.read());
+		outBoxes[0].setSelected(gate.read(0));
+		if(outSize == 2){
+			outBoxes[1].setSelected(gate.read(1));
+		}
+		
+		
 	}
 
 
@@ -81,7 +97,10 @@ public class GateView extends FixedPanel implements ItemListener {
 
 		switches[i].setOn(inBoxes[i].isSelected());
 
-		outBox.setSelected(gate.read());
+		outBoxes[0].setSelected(gate.read(0));
+		if(outBoxes.length == 2){
+			outBoxes[1].setSelected(gate.read(1));
+		}
 	}
 
 
